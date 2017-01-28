@@ -24,11 +24,11 @@ function getToken($azure_key)
     curl_close($ch);
     return $strResponse;
 }
-function curlRequest($url, $authHeader)
+function curlRequest($url)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array($authHeader, "Content-Type: text/xml"));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: text/xml"));
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, False);
     $curlResponse = curl_exec($ch);
@@ -38,7 +38,7 @@ function curlRequest($url, $authHeader)
 $accessToken = getToken($azure_key);
 $params = "text=" . urlencode($inputStr) . "&to=" . $toLanguage . "&from=" . $fromLanguage . "&appId=Bearer+" . $accessToken;
 $translateUrl = "http://api.microsofttranslator.com/v2/Http.svc/Translate?$params";
-$curlResponse = curlRequest($translateUrl, $authHeader);
+$curlResponse = curlRequest($translateUrl);
 $xmlObj = simplexml_load_string($curlResponse);
 foreach ((array)$xmlObj[0] as $val) {
     $translatedStr = $val;
@@ -46,5 +46,5 @@ foreach ((array)$xmlObj[0] as $val) {
 // Translation output:
 echo "<p>From " . $fromLanguage . ": " . $inputStr . "<br>";
 echo "To " . $toLanguage . ": " . $translatedStr . "<br>";
-echo date(r) . "<p>";
+echo date("r") . "<p>";
 ?>
